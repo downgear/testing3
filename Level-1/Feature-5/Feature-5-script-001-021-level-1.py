@@ -14,6 +14,7 @@ from selenium.webdriver.chrome.options import Options
 
 
 class TC0050001(unittest.TestCase):
+    # change stuff in here to init
     def setUp(self):
         self.driver = webdriver.Chrome()
         self.driver.implicitly_wait(30)
@@ -29,10 +30,15 @@ class TC0050001(unittest.TestCase):
         pass_count = 0
         fail_count = 0
         failed_cases = []
+        # --- REPORTING VARIABLES ENDS---
 
+        # read files
         with open('Feature-5-data-001-021-level-1.csv', mode='r', encoding='utf-8-sig') as csvfile:
+            # set correct delimiter for csv file (\t for tab)
             reader = csv.DictReader(csvfile, delimiter='\t')
+            # read in row
             for row in reader:
+                # begin testing
                 total_count += 1
                 tc_id = row['TC_ID']
                 test_name = row.get('TestName', '')
@@ -67,32 +73,29 @@ class TC0050001(unittest.TestCase):
 
                     print(f"  [PASS] {tc_id}")
                     pass_count += 1
-                except AssertionError as e:
-                    # --- FAILURE ---
-                    full_error = str(e)
 
-                    # Logic: Cut the error string at "not found" to avoid printing the whole page body
+                # --- ERR LOG ---
+                except AssertionError as e:
+                    full_error = str(e)
                     marker = "not found"
                     if marker in full_error:
                         end_index = full_error.find(marker) + len(marker)
                         short_error = full_error[:end_index]
                     else:
                         short_error = full_error.split('\n')[0]
-
-                    # Print immediate result (Truncated)
                     print(f"  [FAIL] {tc_id} - {short_error}")
 
                     fail_count += 1
                     failed_cases.append(f"{tc_id}: {short_error}")
 
                 except Exception as e:
-                    # --- SCRIPT ERROR ---
                     print(f"  [ERROR] {tc_id} - Script Error: {str(e)}")
                     fail_count += 1
                     failed_cases.append(f"{tc_id}: Script Error - {str(e)}")
 
                 finally:
                     print("-" * 50)
+                # --- ERR LOG ENDS ---
 
         # --- TEST EXECUTION SUMMARY ---
         print("\n" + "="*50)
@@ -110,7 +113,7 @@ class TC0050001(unittest.TestCase):
         else:
             print("All test cases passed successfully.")
         print("="*50 + "\n")
-        # --- TEST EXECUTION SUMMARY ---
+        # --- TEST EXECUTION SUMMARY ENDS---
 
     def is_element_present(self, how, what):
         try:
