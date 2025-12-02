@@ -1,0 +1,22 @@
+TC_ID	TestName	subLen	questionLen	nameLen	errorMsg	errorInput
+1	BVA-Name-Min-Lower	10	20	2	Name must be between 3 and 32 characters!	name
+2	BVA-Name-Min	10	20	3		
+3	BVA-Name-Min-Upper	10	20	4		
+4	BVA-Name-Min-Nominal	10	20	18		
+5	BVA-Name-Max-Lower	10	20	31		
+6	BVA-Name-Max	10	20	32		
+7	BVA-Name-Max-Upper	10	20	33	Name must be between 3 and 32 characters!	name
+8	BVA-Subject-Min-Lower	2	20	10	Subject must be between 3 and 78 characters!	subject
+9	BVA-Subject-Min	3	20	10		
+10	BVA-Subject-Min-Upper	4	20	10		
+11	BVA-Subject-Nominal	41	20	10		
+12	BVA-Subject-Max-Lower	77	20	10		
+13	BVA-Subject-Max	78	20	10		
+14	BVA-Subject-Max-Upper	79	20	10	Subject must be between 3 and 78 characters!	subject
+15	BVA-Message-Min-Lower	10	9	10	Message must be between 10 and 3000 characters!	message
+16	BVA-Message-Min	10	10	10		
+17	BVA-Message-Min-Upper	10	11	10		
+18	BVA-Message-Nominal	10	1505	10		
+19	BVA-Message-Max-Lower	10	2999	10		
+20	BVA-Message-Max	10	3000	10		
+21	BVA-Message-Max-Upper	10	3001	10	Message must be between 10 and 3000 characters!	message
