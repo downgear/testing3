@@ -1,0 +1,20 @@
+TC_ID	TestName	email	fail
+TC-005-0022	E-Valid-Mail	mail@hcmut.edu.vn	
+TC-005-0023	E-Invalid-Mail	ggggmail	TRUE
+TC-005-0024	E-Valid-Mail-SV-1	first.last@example.com	
+TC-005-0025	E-Valid-Mail-SV-2	user+tag@gmail.com	
+TC-005-0026	E-Valid-Mail-SV-3	user+tag@gmail.com	
+TC-005-0027	E-Valid-Mail-SV-4	user-name@domain.com	
+TC-005-0028	E-Valid-Mail-SV-5	12345@numbers.com	
+TC-005-0029	E-Valid-Mail-SV-6	User.Name@Domain.COM	
+TC-005-0030	E-Valid-Mail-SV-7	user@mail.sub.domain.com	
+TC-005-0031	E-Valid-Mail-SV-8	a@b.co	
+TC-005-0032	E-Valid-Mail-SV-9	user@domain.com	
+TC-005-0033	E-Invalid-Mail-SV-1	userexample.com	TRUE
+TC-005-0034	E-Invalid-Mail-SV-2	user@	TRUE
+TC-005-0035	E-Invalid-Mail-SV-3	user@domain	TRUE
+TC-005-0036	E-Invalid-Mail-SV-4	user@@domain.com	TRUE
+TC-005-0037	E-Invalid-Mail-SV-5	user name@domain.com	TRUE
+TC-005-0038	E-Invalid-Mail-SV-6	.user@domain.com	TRUE
+TC-005-0039	E-Invalid-Mail-SV-7	user..name@domain.com	TRUE
+TC-005-0040	E-Invalid-Mail-SV-8	user!@domain.com	TRUE

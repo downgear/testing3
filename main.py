@@ -89,21 +89,7 @@ def run_tests(level, feature, test_type):
     # Find script files
     scripts_to_run = []
 
-    if test_type == 'all':
-        # Find both standard and scenario scripts
-        scripts_to_run = sorted(base_path.glob(f"Feature-{feature}-script-*.py"))
-    else:
-        # Find specific test type
-        if test_type == 'standard':
-            # Standard tests typically start with 001-0xx
-            candidates = sorted(base_path.glob(f"Feature-{feature}-script-001*.py"))
-        else:  # scenario
-            # Scenario tests typically start with higher numbers (034+)
-            candidates = sorted(base_path.glob(f"Feature-{feature}-script-03*.py"))
-            if not candidates:
-                candidates = sorted(base_path.glob(f"Feature-{feature}-script-[3-9]*.py"))
-
-        scripts_to_run = candidates
+    scripts_to_run = sorted(base_path.glob(f"*.py"))
 
     if not scripts_to_run:
         print(f"No test scripts found for Feature {feature} Level {level}")

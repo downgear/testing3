@@ -33,7 +33,7 @@ class TC0050001(unittest.TestCase):
         # --- REPORTING VARIABLES ENDS---
 
         # read files
-        with open('Feature-5-data-001-021-level-1.csv', mode='r', encoding='utf-8-sig') as csvfile:
+        with open('Feature-5-data-0022-0040-level-1.csv', mode='r', encoding='utf-8-sig') as csvfile:
             # set correct delimiter for csv file (\t for tab)
             reader = csv.DictReader(csvfile, delimiter='\t')
             # read in row
@@ -47,28 +47,33 @@ class TC0050001(unittest.TestCase):
                     driver.get(self.base_url)
                     driver.find_element(By.LINK_TEXT, "Ask Question").click()
 
-                    driver.find_element(By.NAME, "email").send_keys("dang.nguyen106@hcmut.edu.vn")
-                    driver.find_element(By.NAME, "subject").send_keys("A" * int(row["subLen"]))
-                    driver.find_element(By.NAME, "message").send_keys("A" * int(row["questionLen"]))
-                    driver.find_element(By.NAME, "name").send_keys("A" * int(row["nameLen"]))
+                    driver.find_element(By.NAME, "subject").send_keys("Inquiry Subject")
+                    driver.find_element(By.NAME, "message").send_keys("I have a question")
+                    driver.find_element(By.NAME, "name").send_keys("Nguyen Hai Dang")
+                    driver.find_element(By.NAME, "email").send_keys(row['email'])
 
                     driver.find_element(By.XPATH, "//button[@type='submit']").click()
 
-                    if row["errorMsg"]:
+                    if row["fail"]:
                         selector = (
-                            "//div[contains(@class,'form-group')][.//input[@name='" + row['errorInput'] + "']]"
-                            "//div[contains(@class,'error') and contains(@class,'text-danger')] | "
-                            "//div[contains(@class,'form-group')][.//textarea[@name='" + row['errorInput'] + "']]"
-                            "//div[contains(@class,'error') and contains(@class,'text-danger')]"
+                            "//div[contains(@class,'form-group')][.//input[@name='email']]//div[contains(@class,'error') and contains(@class,'text-danger')]"
+                        )
+                        self.assertTrue(
+                            self.is_element_present(
+                                By.XPATH,
+                                selector,
+                            ),
+                            "Did not handle email correctly"
                         )
                         actual = driver.find_element(By.XPATH, selector).text
-                        self.assertEqual(row["errorMsg"], actual)
+                        self.assertEqual("E-Mail Address does not appear to be valid!", actual)
                     else:
                         self.assertTrue(
                             self.is_element_present(
                                 By.XPATH,
-                                "//div[contains(@class,'alert-success') and contains(.,'successfully sent')]"
-                            )
+                                "//div[contains(@class,'alert-success') and contains(.,'successfully sent')]",
+                            ),
+                            "Did not handle email correctly"
                         )
 
                     print(f"  [PASS] {tc_id}")
