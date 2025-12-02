@@ -1,0 +1,2 @@
+TC_ID	TestName	subject	question	name	csubject	cquestion	cname	errorMsg	input
+TC-005-0042	UC-Alt-1	H	Q	N	Inquiry Subject	I have a question	Nguyen Hai Dang	Name must be between 3 and 32 characters!,Subject must be between 3 and 78 characters!,Message must be between 10 and 3000 characters!	name,subject,message
