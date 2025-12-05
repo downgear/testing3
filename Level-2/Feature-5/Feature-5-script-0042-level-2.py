@@ -112,6 +112,9 @@ class TC0050001(unittest.TestCase):
                         actual = driver.find_element(By.XPATH, selector).text
                         self.assertEqual(errMessage, actual)
 
+                    driver.find_element(self.config['Subject']['type'], self.config['Subject']['value']).clear()
+                    driver.find_element(self.config['Message']['type'], self.config['Message']['value']).clear()
+                    driver.find_element(self.config['Name']['type'], self.config['Name']['value']).clear()
                     driver.find_element(self.config['Subject']['type'], self.config['Subject']['value']).send_keys(row["csubject"])
                     driver.find_element(self.config['Message']['type'], self.config['Message']['value']).send_keys(row["cquestion"])
                     driver.find_element(self.config['Name']['type'], self.config['Name']['value']).send_keys(row["cname"])
