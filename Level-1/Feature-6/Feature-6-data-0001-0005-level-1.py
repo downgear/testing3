@@ -68,63 +68,39 @@ class TC0050001(unittest.TestCase):
                     price_el = driver.find_element(By.XPATH, "//h3[@data-update='price']")
                     price_text = price_el.text.strip()
                     original_small_unit_price = float(price_text.replace("$", ""))
-                    buy_now = self.wait.until(
-                        EC.presence_of_element_located((
+                    self.wait.until(EC.presence_of_element_located((By.XPATH, "//button[@data-redirecttocart and contains(@class, 'button-buynow')]/ancestor::div[contains(@class, 'entry-col') or contains(@class, 'entry-component')]//button[contains(@class, 'button-cart') and contains(@class, 'btn-cart')]")))
+                    add_to_cart = self.wait.until(
+                        EC.element_to_be_clickable((
                             By.XPATH,
-                            "//button[@data-redirecttocart and contains(@class, 'button-buynow')]"
+                            "//button[@data-redirecttocart and contains(@class, 'button-buynow')]/ancestor::div[contains(@class, 'entry-col') or contains(@class, 'entry-component')]//button[contains(@class, 'button-cart') and contains(@class, 'btn-cart')]"
                         ))
                     )
-                    parent = buy_now.find_element(
-                        By.XPATH,
-                        "./ancestor::div[contains(@class, 'entry-col') or contains(@class, 'entry-component')]"
-                    )
-                    add_to_cart = parent.find_element(
-                        By.XPATH,
-                        ".//button[contains(@class, 'button-cart') and contains(@class, 'btn-cart')]"
-                    )
-                    self.wait.until(EC.element_to_be_clickable(add_to_cart))
                     add_to_cart.click()
                     # medium
                     driver.find_element(By.XPATH, "//div[contains(@class,'form-group') and contains(@class,'required')]//select").click()
                     sel = Select(driver.find_element(By.XPATH, "//div[contains(@class,'form-group') and contains(@class,'required')]//select"))
                     text = [o.text for o in sel.options if "Medium" in o.text][0]
                     sel.select_by_visible_text(text)
-                    buy_now = self.wait.until(
-                        EC.presence_of_element_located((
+                    self.wait.until(EC.presence_of_element_located((By.XPATH, "//button[@data-redirecttocart and contains(@class, 'button-buynow')]/ancestor::div[contains(@class, 'entry-col') or contains(@class, 'entry-component')]//button[contains(@class, 'button-cart') and contains(@class, 'btn-cart')]")))
+                    add_to_cart = self.wait.until(
+                        EC.element_to_be_clickable((
                             By.XPATH,
-                            "//button[@data-redirecttocart and contains(@class, 'button-buynow')]"
+                            "//button[@data-redirecttocart and contains(@class, 'button-buynow')]/ancestor::div[contains(@class, 'entry-col') or contains(@class, 'entry-component')]//button[contains(@class, 'button-cart') and contains(@class, 'btn-cart')]"
                         ))
                     )
-                    parent = buy_now.find_element(
-                        By.XPATH,
-                        "./ancestor::div[contains(@class, 'entry-col') or contains(@class, 'entry-component')]"
-                    )
-                    add_to_cart = parent.find_element(
-                        By.XPATH,
-                        ".//button[contains(@class, 'button-cart') and contains(@class, 'btn-cart')]"
-                    )
-                    self.wait.until(EC.element_to_be_clickable(add_to_cart))
                     add_to_cart.click()
                     # large
                     driver.find_element(By.XPATH, "//div[contains(@class,'form-group') and contains(@class,'required')]//select").click()
                     sel = Select(driver.find_element(By.XPATH, "//div[contains(@class,'form-group') and contains(@class,'required')]//select"))
                     text = [o.text for o in sel.options if "Large" in o.text][0]
                     sel.select_by_visible_text(text)
-                    buy_now = self.wait.until(
-                        EC.presence_of_element_located((
+                    self.wait.until(EC.presence_of_element_located((By.XPATH, "//button[@data-redirecttocart and contains(@class, 'button-buynow')]/ancestor::div[contains(@class, 'entry-col') or contains(@class, 'entry-component')]//button[contains(@class, 'button-cart') and contains(@class, 'btn-cart')]")))
+                    add_to_cart = self.wait.until(
+                        EC.element_to_be_clickable((
                             By.XPATH,
-                            "//button[@data-redirecttocart and contains(@class, 'button-buynow')]"
+                            "//button[@data-redirecttocart and contains(@class, 'button-buynow')]/ancestor::div[contains(@class, 'entry-col') or contains(@class, 'entry-component')]//button[contains(@class, 'button-cart') and contains(@class, 'btn-cart')]"
                         ))
                     )
-                    parent = buy_now.find_element(
-                        By.XPATH,
-                        "./ancestor::div[contains(@class, 'entry-col') or contains(@class, 'entry-component')]"
-                    )
-                    add_to_cart = parent.find_element(
-                        By.XPATH,
-                        ".//button[contains(@class, 'button-cart') and contains(@class, 'btn-cart')]"
-                    )
-                    self.wait.until(EC.element_to_be_clickable(add_to_cart))
                     add_to_cart.click()
                     # cart
                     driver.get(self.cart_url)
@@ -153,7 +129,7 @@ class TC0050001(unittest.TestCase):
                             By.XPATH,
                             f"//tr[td[@class='text-left'] and .//a[contains(@href,'product_id={prod_id}')] and .//small[normalize-space()='Size: {size_label}']]"
                         )
-                        qty_input = tr.find_element(By.XPATH, ".//input[contains(@name,'quantity')]")
+                        qty_input = self.wait.until(lambda d: tr.find_element(By.XPATH, ".//input[contains(@name,'quantity')]"))
                         qty_input.clear()
                         qty_input.send_keys(qty)
                         update_btn = tr.find_element(

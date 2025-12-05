@@ -1,0 +1,11 @@
+ElementName	LocatorType	LocatorValue
+BaseUrl	url	https://ecommerce-playground.lambdatest.io/index.php?route=product/product&product_id=
+CartUrl	url	https://ecommerce-playground.lambdatest.io/index.php?route=checkout/cart
+AddCartBtn	xpath	
+SizeForm	xpath	//div[contains(@class,'form-group') and contains(@class,'required')]//select
+PriceText	xpath	//h3[@data-update='price']
+UpdCartBtn	xpath	
+DelCartBtn	xpath	
+UnitPrcTxt	xpath	
+SuccessTxt	xpath	
+ErrTxt	xpath	
