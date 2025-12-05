@@ -19,8 +19,44 @@ class TC0050001(unittest.TestCase):
         self.driver = webdriver.Chrome()
         self.driver.implicitly_wait(30)
         self.driver.maximize_window()
-        self.base_url = "https://ecommerce-playground.lambdatest.io/index.php?route=product/product&product_id=88"
+        self.config = self._load_config('Feature-5-config-level-2.csv')
         self.verificationErrors = []
+
+    def _load_config(self, config_file):
+        """
+        Load element configuration from CSV file.
+
+        Returns a dictionary mapping element names to their locator information.
+        Format: {element_name: {'type': locator_type, 'value': locator_value}}
+        """
+        LOCATOR_MAP = {
+            'id': By.ID,
+            'name': By.NAME,
+            'xpath': By.XPATH,
+            'css': By.CSS_SELECTOR,
+            'link_text': By.LINK_TEXT,
+            'partial_link_text': By.PARTIAL_LINK_TEXT,
+            'tag_name': By.TAG_NAME,
+            'class_name': By.CLASS_NAME,
+            'url': 'url'  # Special case
+        }
+        config = {}
+        try:
+            with open(config_file, mode='r', encoding='utf-8-sig') as csvfile:
+                reader = csv.DictReader(csvfile, delimiter='\t')
+                for row in reader:
+                    element_name = row['ElementName']
+                    locator_type = row['LocatorType']
+                    locator_value = row['LocatorValue']
+                    if locator_type not in LOCATOR_MAP:
+                        raise ValueError(f"Unknown locator type: {locator_type}")
+                    config[element_name] = {
+                        'type': LOCATOR_MAP[locator_type],
+                        'value': locator_value
+                    }
+            return config
+        except FileNotFoundError:
+            raise Exception(f"Configuration file '{config_file}' not found!")
 
     def test_t_c0050001(self):
         driver = self.driver
@@ -33,7 +69,7 @@ class TC0050001(unittest.TestCase):
         # --- REPORTING VARIABLES ENDS---
 
         # read files
-        with open('Feature-5-data-0041-level-1.csv', mode='r', encoding='utf-8-sig') as csvfile:
+        with open('Feature-5-data-0041-level-2.csv', mode='r', encoding='utf-8-sig') as csvfile:
             # set correct delimiter for csv file (\t for tab)
             reader = csv.DictReader(csvfile, delimiter='\t')
             # read in row
@@ -44,20 +80,19 @@ class TC0050001(unittest.TestCase):
                 test_name = row.get('TestName', '')
                 print(f"Running Test Case: {tc_id} - {test_name}")
                 try:
-                    driver.get(self.base_url)
-                    driver.find_element(By.LINK_TEXT, "Ask Question").click()
+                    driver.get(self.config['BaseUrl']['value'])
+                    driver.find_element(self.config['AskQuestionBtn']['type'], self.config['AskQuestionBtn']['value']).click()
 
-                    driver.find_element(By.NAME, "email").send_keys("dang.nguyen106@hcmut.edu.vn")
-                    driver.find_element(By.NAME, "subject").send_keys(row["subject"])
-                    driver.find_element(By.NAME, "message").send_keys(row["question"])
-                    driver.find_element(By.NAME, "name").send_keys(row["name"])
+                    driver.find_element(self.config['Email']['type'], self.config['Email']['value']).send_keys("dang.nguyen106@hcmut.edu.vn")
+                    driver.find_element(self.config['Subject']['type'], self.config['Subject']['value']).send_keys(row["subject"])
+                    driver.find_element(self.config['Message']['type'], self.config['Message']['value']).send_keys(row["question"])
+                    driver.find_element(self.config['Name']['type'], self.config['Name']['value']).send_keys(row["name"])
 
-                    driver.find_element(By.XPATH, "//button[@type='submit']").click()
+                    driver.find_element(self.config['SubmitBtn']['type'], self.config['SubmitBtn']['value']).click()
 
                     self.assertTrue(
                         self.is_element_present(
-                            By.XPATH,
-                            "//div[contains(@class,'alert-success') and contains(.,'successfully sent')]"
+                            self.config['SuccessToast']['type'], self.config['SuccessToast']['value']
                         ),
                         f"Did not handle correctly"
                     )

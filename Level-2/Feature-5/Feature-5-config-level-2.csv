@@ -1,0 +1,10 @@
+ElementName	LocatorType	LocatorValue
+BaseUrl	url	https://ecommerce-playground.lambdatest.io/index.php?route=product/product&product_id=88
+Email	name	email
+Subject	name	subject
+Message	name	message
+Name	name	name
+SubmitBtn	xpath	//button[@type='submit']
+ErrToast	xpath	//div[contains(@class,'error') and contains(@class,'text-danger')]
+SuccessToast	xpath	//div[contains(@class,'alert-success') and contains(.,'successfully sent')]
+AskQuestionBtn	link_text	Ask Question
