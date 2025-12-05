@@ -53,7 +53,6 @@ class TC0050001(unittest.TestCase):
                     driver.find_element(By.NAME, "name").send_keys(row["name"])
 
                     driver.find_element(By.XPATH, "//button[@type='submit']").click()
-
                     inp = row["input"]
                     inps = inp.split(",") if inp else []
                     errMsg = row["errorMsg"]

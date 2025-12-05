@@ -53,6 +53,33 @@ class TC0050001(unittest.TestCase):
                     driver.find_element(By.NAME, "name").send_keys(row["name"])
 
                     driver.find_element(By.XPATH, "//button[@type='submit']").click()
+                    inp = row["input"]
+                    inps = inp.split(",") if inp else []
+                    errMsg = row["errorMsg"]
+                    errMsgs = errMsg.split(",") if errMsg else []
+
+                    for (input, errMessage) in zip(inps, errMsgs):
+                        selector = (
+                            "//div[contains(@class,'form-group')][.//input[@name='" + input + "']]"
+                            "//div[contains(@class,'error') and contains(@class,'text-danger')] | "
+                            "//div[contains(@class,'form-group')][.//textarea[@name='" + input + "']]"
+                            "//div[contains(@class,'error') and contains(@class,'text-danger')]"
+                        )
+                        self.assertTrue(
+                            self.is_element_present(
+                                By.XPATH,
+                                selector,
+                            ),
+                            f"Did not handle {input} correctly"
+                        )
+                        actual = driver.find_element(By.XPATH, selector).text
+                        self.assertEqual(errMessage, actual)
+
+                    driver.find_element(By.NAME, "subject").send_keys(row["csubject"])
+                    driver.find_element(By.NAME, "message").send_keys(row["cquestion"])
+                    driver.find_element(By.NAME, "name").send_keys(row["cname"])
+
+                    driver.find_element(By.XPATH, "//button[@type='submit']").click()
                     self.assertTrue(
                         self.is_element_present(
                             By.XPATH,
