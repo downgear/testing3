@@ -1,11 +1,15 @@
 ElementName	LocatorType	LocatorValue
 BaseUrl	url	https://ecommerce-playground.lambdatest.io/index.php?route=product/product&product_id=
 CartUrl	url	https://ecommerce-playground.lambdatest.io/index.php?route=checkout/cart
-AddCartBtn	xpath	
+AddCartBtn	xpath	//button[@data-redirecttocart and contains(@class, 'button-buynow')]/ancestor::div[contains(@class, 'entry-col') or contains(@class, 'entry-component')]//button[contains(@class, 'button-cart') and contains(@class, 'btn-cart')]
 SizeForm	xpath	//div[contains(@class,'form-group') and contains(@class,'required')]//select
 PriceText	xpath	//h3[@data-update='price']
-UpdCartBtn	xpath	
-DelCartBtn	xpath	
-UnitPrcTxt	xpath	
-SuccessTxt	xpath	
-ErrTxt	xpath	
+UpdCartBtn	xpath	.//button[contains(@class,'btn-primary') and @type='submit']
+DelCartBtn	xpath	.//button[contains(@class,'btn-danger') and @type='button']
+UnitPrcTxt	xpath	.//td[@class='text-right'][1]
+Tr	xpath	//tr[td[@class='text-left'] and .//a[contains(@href,'product_id={prod_id}')]]
+TrNot	xpath	//tr[td[@class='text-left'] and not(.//a[contains(@href,'product_id={prod_id}')])]
+SizeBtn	xpath	//tr[td[@class='text-left'] and .//a[contains(@href,'product_id={prod_id}')] and .//small[normalize-space()='Size: {size_label}']]
+QuantInp	xpath	.//input[contains(@name,'quantity')]
+SuccessTxt	xpath	//div[contains(@class,'alert-success')]
+ErrTxt	xpath	//div[contains(@class,'alert-danger')]

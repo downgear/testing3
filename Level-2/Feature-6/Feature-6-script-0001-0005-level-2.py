@@ -25,10 +25,45 @@ class TC0050001(unittest.TestCase):
         self.driver = webdriver.Chrome(options=chrome_options)
         self.driver.implicitly_wait(10)
         self.driver.maximize_window()
-        self.base_url = "https://ecommerce-playground.lambdatest.io/index.php?route=product/product&product_id="
-        self.cart_url = "https://ecommerce-playground.lambdatest.io/index.php?route=checkout/cart"
+        self.config = self._load_config('Feature-6-config-level-2.csv')
         self.verificationErrors = []
         self.wait = WebDriverWait(self.driver, 10)
+
+    def _load_config(self, config_file):
+        """
+        Load element configuration from CSV file.
+
+        Returns a dictionary mapping element names to their locator information.
+        Format: {element_name: {'type': locator_type, 'value': locator_value}}
+        """
+        LOCATOR_MAP = {
+            'id': By.ID,
+            'name': By.NAME,
+            'xpath': By.XPATH,
+            'css': By.CSS_SELECTOR,
+            'link_text': By.LINK_TEXT,
+            'partial_link_text': By.PARTIAL_LINK_TEXT,
+            'tag_name': By.TAG_NAME,
+            'class_name': By.CLASS_NAME,
+            'url': 'url'  # Special case
+        }
+        config = {}
+        try:
+            with open(config_file, mode='r', encoding='utf-8-sig') as csvfile:
+                reader = csv.DictReader(csvfile, delimiter='\t')
+                for row in reader:
+                    element_name = row['ElementName']
+                    locator_type = row['LocatorType']
+                    locator_value = row['LocatorValue']
+                    if locator_type not in LOCATOR_MAP:
+                        raise ValueError(f"Unknown locator type: {locator_type}")
+                    config[element_name] = {
+                        'type': LOCATOR_MAP[locator_type],
+                        'value': locator_value
+                    }
+            return config
+        except FileNotFoundError:
+            raise Exception(f"Configuration file '{config_file}' not found!")
 
     def test_t_c0050001(self):
         driver = self.driver
@@ -41,7 +76,7 @@ class TC0050001(unittest.TestCase):
         # --- REPORTING VARIABLES ENDS---
 
         # read files
-        with open('Feature-6-data-0001-0005-level-1.csv', mode='r', encoding='utf-8-sig') as csvfile:
+        with open('Feature-6-data-0001-0005-level-2.csv', mode='r', encoding='utf-8-sig') as csvfile:
             # set correct delimiter for csv file (\t for tab)
             reader = csv.DictReader(csvfile, delimiter='\t')
             # read in row
@@ -53,68 +88,63 @@ class TC0050001(unittest.TestCase):
                 print(f"Running Test Case: {tc_id} - {test_name}")
                 try:
                     prod_id = row['pid']
-                    driver.get(self.base_url + prod_id)
-                    def_price = driver.find_element(By.XPATH, "//h3[@data-update='price']").text
+                    driver.get(self.config['BaseUrl']['value'] + prod_id)
+                    def_price = driver.find_element(self.config['PriceText']['type'], self.config['PriceText']['value']).text
                     # small
-                    driver.find_element(By.XPATH, "//div[contains(@class,'form-group') and contains(@class,'required')]//select").click()
-                    sel = Select(driver.find_element(By.XPATH, "//div[contains(@class,'form-group') and contains(@class,'required')]//select"))
+                    driver.find_element(self.config['SizeForm']['type'], self.config['SizeForm']['value']).click()
+                    sel = Select(driver.find_element(self.config['SizeForm']['type'], self.config['SizeForm']['value']))
                     text = [o.text for o in sel.options if "Small" in o.text][0]
                     sel.select_by_visible_text(text)
                     # get original price for small
                     # wait for price to update
                     WebDriverWait(driver, 10).until(
-                        lambda d: d.find_element(By.XPATH, "//h3[@data-update='price']").text != def_price
+                        lambda d: d.find_element(self.config['PriceText']['type'], self.config['PriceText']['value']).text != def_price
                     )
                     # Now safely get updated price
-                    price_el = driver.find_element(By.XPATH, "//h3[@data-update='price']")
+                    price_el = driver.find_element(self.config['PriceText']['type'], self.config['PriceText']['value'])
                     price_text = price_el.text.strip()
                     original_small_unit_price = float(price_text.replace("$", ""))
-                    self.wait.until(EC.presence_of_element_located((By.XPATH, "//button[@data-redirecttocart and contains(@class, 'button-buynow')]/ancestor::div[contains(@class, 'entry-col') or contains(@class, 'entry-component')]//button[contains(@class, 'button-cart') and contains(@class, 'btn-cart')]")))
+                    self.wait.until(EC.presence_of_element_located((self.config['AddCartBtn']['type'], self.config['AddCartBtn']['value'])))
                     add_to_cart = self.wait.until(
                         EC.element_to_be_clickable((
-                            By.XPATH,
-                            "//button[@data-redirecttocart and contains(@class, 'button-buynow')]/ancestor::div[contains(@class, 'entry-col') or contains(@class, 'entry-component')]//button[contains(@class, 'button-cart') and contains(@class, 'btn-cart')]"
+                            self.config['AddCartBtn']['type'], self.config['AddCartBtn']['value']
                         ))
                     )
                     add_to_cart.click()
                     # medium
-                    driver.find_element(By.XPATH, "//div[contains(@class,'form-group') and contains(@class,'required')]//select").click()
-                    sel = Select(driver.find_element(By.XPATH, "//div[contains(@class,'form-group') and contains(@class,'required')]//select"))
+                    driver.find_element(self.config['SizeForm']['type'], self.config['SizeForm']['value']).click()
+                    sel = Select(driver.find_element(self.config['SizeForm']['type'], self.config['SizeForm']['value']))
                     text = [o.text for o in sel.options if "Medium" in o.text][0]
                     sel.select_by_visible_text(text)
-                    self.wait.until(EC.presence_of_element_located((By.XPATH, "//button[@data-redirecttocart and contains(@class, 'button-buynow')]/ancestor::div[contains(@class, 'entry-col') or contains(@class, 'entry-component')]//button[contains(@class, 'button-cart') and contains(@class, 'btn-cart')]")))
+                    self.wait.until(EC.presence_of_element_located((self.config['AddCartBtn']['type'], self.config['AddCartBtn']['value'])))
                     add_to_cart = self.wait.until(
                         EC.element_to_be_clickable((
-                            By.XPATH,
-                            "//button[@data-redirecttocart and contains(@class, 'button-buynow')]/ancestor::div[contains(@class, 'entry-col') or contains(@class, 'entry-component')]//button[contains(@class, 'button-cart') and contains(@class, 'btn-cart')]"
+                            self.config['AddCartBtn']['type'], self.config['AddCartBtn']['value']
                         ))
                     )
                     add_to_cart.click()
                     # large
-                    driver.find_element(By.XPATH, "//div[contains(@class,'form-group') and contains(@class,'required')]//select").click()
-                    sel = Select(driver.find_element(By.XPATH, "//div[contains(@class,'form-group') and contains(@class,'required')]//select"))
+                    driver.find_element(self.config['SizeForm']['type'], self.config['SizeForm']['value']).click()
+                    sel = Select(driver.find_element(self.config['SizeForm']['type'], self.config['SizeForm']['value']))
                     text = [o.text for o in sel.options if "Large" in o.text][0]
                     sel.select_by_visible_text(text)
-                    self.wait.until(EC.presence_of_element_located((By.XPATH, "//button[@data-redirecttocart and contains(@class, 'button-buynow')]/ancestor::div[contains(@class, 'entry-col') or contains(@class, 'entry-component')]//button[contains(@class, 'button-cart') and contains(@class, 'btn-cart')]")))
+                    self.wait.until(EC.presence_of_element_located((self.config['AddCartBtn']['type'], self.config['AddCartBtn']['value'])))
                     add_to_cart = self.wait.until(
                         EC.element_to_be_clickable((
-                            By.XPATH,
-                            "//button[@data-redirecttocart and contains(@class, 'button-buynow')]/ancestor::div[contains(@class, 'entry-col') or contains(@class, 'entry-component')]//button[contains(@class, 'button-cart') and contains(@class, 'btn-cart')]"
+                            self.config['AddCartBtn']['type'], self.config['AddCartBtn']['value']
                         ))
                     )
                     add_to_cart.click()
                     # cart
-                    driver.get(self.cart_url)
+                    driver.get(self.config['CartUrl']['value'])
                     # remove other item
                     rows = driver.find_elements(
-                        By.XPATH,
-                        f"//tr[td[@class='text-left'] and not(.//a[contains(@href,'product_id={prod_id}')])]"
+                        self.config['TrNot']['type'], self.config['TrNot']['value'].format(prod_id=prod_id)
                     )
                     for i in range(len(rows)-1, -1, -1):
                         tr = rows[i]
                         delete_btn = tr.find_element(
-                            By.XPATH,
-                            ".//button[contains(@class,'btn-danger') and @type='button']"
+                            self.config['ErrTxt']['type'], self.config['ErrTxt']['value']
                         )
                         self.wait.until(EC.element_to_be_clickable(delete_btn))
                         delete_btn.click()
@@ -130,9 +160,9 @@ class TC0050001(unittest.TestCase):
                         while (retry < 3):
                             try:
                                 qty_input = self.wait.until(lambda d: d.find_element(
-                                    By.XPATH,
-                                    f"//tr[td[@class='text-left'] and .//a[contains(@href,'product_id={prod_id}')] and .//small[normalize-space()='Size: {size_label}']]"
-                                ).find_element(By.XPATH, ".//input[contains(@name,'quantity')]"))
+                                    self.config['SizeBtn']['type'],
+                                    self.config['SizeBtn']['value'].format(prod_id=prod_id, size_label=size_label)
+                                ).find_element(self.config['QuantInp']['type'], self.config['QuantInp']['value']))
                                 qty_input.clear()
                                 qty_input.send_keys(qty)
                                 break
@@ -143,9 +173,9 @@ class TC0050001(unittest.TestCase):
                         while (retry < 3):
                             try:
                                 update_btn = self.wait.until(lambda d: d.find_element(
-                                    By.XPATH,
-                                    f"//tr[td[@class='text-left'] and .//a[contains(@href,'product_id={prod_id}')] and .//small[normalize-space()='Size: {size_label}']]"
-                                ).find_element(By.XPATH, ".//button[contains(@class,'btn-primary') and @type='submit']"))
+                                    self.config['SizeBtn']['type'],
+                                    self.config['SizeBtn']['value'].format(prod_id=prod_id, size_label=size_label)
+                                ).find_element(self.config['UpdCartBtn']['type'], self.config['UpdCartBtn']['value']))
                                 self.wait.until(EC.element_to_be_clickable(update_btn))
                                 update_btn.click()
                                 break
@@ -153,10 +183,15 @@ class TC0050001(unittest.TestCase):
                                 retry += 1
                     # end reset quantity
 
-                    unit_price_el = self.wait.until(lambda d: d.find_element(
-                        By.XPATH,
-                        f"//tr[td[@class='text-left'] and .//a[contains(@href,'product_id={prod_id}')] and .//small[normalize-space()='Size: Small']]"
-                    ).find_element(By.XPATH, ".//td[@class='text-right'][1]"))
+                    unit_price_el = self.wait.until(lambda d:
+                                                    d.find_element(
+                                                        self.config['SizeBtn']['type'],
+                                                        self.config['SizeBtn']['value'].format(prod_id=prod_id, size_label="Small")
+                                                    ).find_element(
+                                                        self.config['UnitPrcTxt']['type'],
+                                                        self.config['UnitPrcTxt']['value']
+                                                    )
+                                                    )
                     new_small_unit_price = float(unit_price_el.text.strip().replace("$", ""))
 
                     if row['discount']:
@@ -168,14 +203,14 @@ class TC0050001(unittest.TestCase):
 
                     if (row['error']):
                         self.assertTrue(
-                            self.is_element_present(By.XPATH, "//div[contains(@class,'alert-danger')]")
+                            self.is_element_present(self.config['ErrTxt']['type'], self.config['ErrTxt']['value'])
                         )
                     else:
                         self.assertTrue(
-                            self.is_element_present(By.XPATH, "//div[contains(@class,'alert-success')]")
+                            self.is_element_present(self.config['SuccessTxt']['type'], self.config['SuccessTxt']['value'])
                         )
                         self.assertFalse(
-                            self.is_element_present(By.XPATH, "//div[contains(@class,'alert-danger')]")
+                            self.is_element_present(self.config['ErrTxt']['type'], self.config['ErrTxt']['value'])
                         )
 
                     print(f"  [PASS] {tc_id}")
