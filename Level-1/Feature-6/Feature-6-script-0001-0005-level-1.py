@@ -166,14 +166,20 @@ class TC0050001(unittest.TestCase):
                             f"There was supposed to be a discount."
                         )
 
-                    if (row['error']):
+                    if (row['fail']):
+                        selector = "//div[contains(@class,'alert-danger')]"
                         self.assertTrue(
                             self.is_element_present(By.XPATH, "//div[contains(@class,'alert-danger')]")
                         )
+                        text = self.driver.find_element(By.XPATH, selector).text
+                        self.assertIn(row['Expected Result'], text)
                     else:
+                        selector = "//div[contains(@class,'alert-success')]"
                         self.assertTrue(
                             self.is_element_present(By.XPATH, "//div[contains(@class,'alert-success')]")
                         )
+                        text = self.driver.find_element(By.XPATH, selector).text
+                        self.assertIn(row['Expected Result'], text)
                         self.assertFalse(
                             self.is_element_present(By.XPATH, "//div[contains(@class,'alert-danger')]")
                         )
