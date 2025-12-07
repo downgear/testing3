@@ -90,15 +90,9 @@ class TC0050001(unittest.TestCase):
 
                     driver.find_element(self.config['SubmitBtn']['type'], self.config['SubmitBtn']['value']).click()
 
-                    selector = ((
-                        "//div[contains(@class,'form-group')][.//input[@name='" + row['input'] + "']]" +
-                        self.config['ErrToast']['value'] +
-                        " | " +
-                        "//div[contains(@class,'form-group')][.//textarea[@name='" + row['input'] + "']]" +
-                        self.config['ErrToast']['value']
-                    )
-                        if row["fail"]
-                        else self.config['SuccessToast']['value'])
+                    selector = (self.config['ErrToast']['value'].format(input=input)
+                                if row["fail"]
+                                else self.config['SuccessToast']['value'])
                     selectorType = (self.config['ErrToast']['type'] if row['fail'] else self.config['SuccessToast']['type'])
                     self.assertTrue(
                         self.is_element_present(

@@ -95,13 +95,7 @@ class TC0050001(unittest.TestCase):
                     errMsgs = errMsg.split(",") if errMsg else []
 
                     for (input, errMessage) in zip(inps, errMsgs):
-                        selector = (
-                            "//div[contains(@class,'form-group')][.//input[@name='" + input + "']]" +
-                            self.config['ErrToast']['value'] +
-                            " | " +
-                            "//div[contains(@class,'form-group')][.//textarea[@name='" + input + "']]" +
-                            self.config['ErrToast']['value']
-                        )
+                        selector = self.config['ErrToast']['value'].format(input=input)
                         self.assertTrue(
                             self.is_element_present(
                                 self.config['ErrToast']['type'],

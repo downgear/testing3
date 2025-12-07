@@ -5,6 +5,6 @@ Subject	name	subject
 Message	name	message
 Name	name	name
 SubmitBtn	xpath	//button[@type='submit']
-ErrToast	xpath	//div[contains(@class,'error') and contains(@class,'text-danger')]
+ErrToast	xpath	//div[contains(@class,'form-group')][.//input[@name='{input}']]//div[contains(@class,'error') and contains(@class,'text-danger')] | //div[contains(@class,'form-group')][.//textarea[@name='{input}']]//div[contains(@class,'error') and contains(@class,'text-danger')]
 SuccessToast	xpath	//div[contains(@class,'alert-success') and contains(.,'successfully sent')]
 AskQuestionBtn	link_text	Ask Question

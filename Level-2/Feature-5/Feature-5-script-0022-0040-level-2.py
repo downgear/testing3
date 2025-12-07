@@ -91,7 +91,7 @@ class TC0050001(unittest.TestCase):
                     driver.find_element(self.config['SubmitBtn']['type'], self.config['SubmitBtn']['value']).click()
 
                     selector = ((
-                        "//div[contains(@class,'form-group')][.//input[@name='email']]" + self.config['ErrToast']['value']
+                        self.config['ErrToast']['value'].format(input="email")
                     ) if row['fail'] else self.config['SuccessToast']['value'])
                     selectorType = (self.config['ErrToast']['type'] if row['fail'] else self.config['SuccessToast']['type'])
                     self.assertTrue(
