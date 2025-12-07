@@ -16,7 +16,9 @@ from selenium.webdriver.chrome.options import Options
 class TC0050001(unittest.TestCase):
     # change stuff in here to init
     def setUp(self):
-        self.driver = webdriver.Chrome()
+        chrome_options = Options()
+        chrome_options.add_argument("--log-level=3")
+        self.driver = webdriver.Chrome(options=chrome_options)
         self.driver.implicitly_wait(10)
         self.driver.maximize_window()
         self.config = self._load_config('Feature-5-config-level-2.csv')
