@@ -16,7 +16,9 @@ from selenium.webdriver.chrome.options import Options
 class TC0050001(unittest.TestCase):
     # change stuff in here to init
     def setUp(self):
-        self.driver = webdriver.Chrome()
+        chrome_options = Options()
+        chrome_options.add_argument("--log-level=3")
+        self.driver = webdriver.Chrome(options=chrome_options)
         self.driver.implicitly_wait(30)
         self.driver.maximize_window()
         self.base_url = "https://ecommerce-playground.lambdatest.io/index.php?route=product/product&product_id=88"
@@ -54,27 +56,21 @@ class TC0050001(unittest.TestCase):
 
                     driver.find_element(By.XPATH, "//button[@type='submit']").click()
 
-                    if row["fail"]:
-                        selector = (
-                            "//div[contains(@class,'form-group')][.//input[@name='email']]//div[contains(@class,'error') and contains(@class,'text-danger')]"
-                        )
-                        self.assertTrue(
-                            self.is_element_present(
-                                By.XPATH,
-                                selector,
-                            ),
-                            "Did not handle email correctly"
-                        )
-                        actual = driver.find_element(By.XPATH, selector).text
-                        self.assertEqual("E-Mail Address does not appear to be valid!", actual)
-                    else:
-                        self.assertTrue(
-                            self.is_element_present(
-                                By.XPATH,
-                                "//div[contains(@class,'alert-success') and contains(.,'successfully sent')]",
-                            ),
-                            "Did not handle email correctly"
-                        )
+                    selector = (
+                        "//div[contains(@class,'form-group')][.//input[@name='email']]//div[contains(@class,'error') and contains(@class,'text-danger')]"
+                        if row["fail"]
+                        else
+                        "//div[contains(@class,'alert-success')]"
+                    )
+                    self.assertTrue(
+                        self.is_element_present(
+                            By.XPATH,
+                            selector,
+                        ),
+                        f"Did not handle email correctly"
+                    )
+                    actual = driver.find_element(By.XPATH, selector).text
+                    self.assertIn(row["Expected Result"], actual)
 
                     print(f"  [PASS] {tc_id}")
                     pass_count += 1
