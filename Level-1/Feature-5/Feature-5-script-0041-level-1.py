@@ -54,13 +54,16 @@ class TC0050001(unittest.TestCase):
 
                     driver.find_element(By.XPATH, "//button[@type='submit']").click()
 
+                    selector = "//div[contains(@class,'alert-success')]"
                     self.assertTrue(
                         self.is_element_present(
                             By.XPATH,
-                            "//div[contains(@class,'alert-success') and contains(.,'successfully sent')]"
+                            selector
                         ),
                         f"Did not handle correctly"
                     )
+                    actual = driver.find_element(By.XPATH, selector).text
+                    self.assertIn(row["Expected Result"], actual)
 
                     print(f"  [PASS] {tc_id}")
                     pass_count += 1
