@@ -96,6 +96,8 @@ class TC0050001(unittest.TestCase):
                         ),
                         f"Did not handle correctly"
                     )
+                    actual = driver.find_element(self.config['SuccessToast']['type'], self.config['SuccessToast']['value']).text
+                    self.assertIn(row["Expected Result"], actual)
 
                     print(f"  [PASS] {tc_id}")
                     pass_count += 1

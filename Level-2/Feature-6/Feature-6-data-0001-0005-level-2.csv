@@ -1,6 +1,6 @@
-TC_ID	TestName	pid	xsmall	xmedium	xlarge	discount	error
-TC-005-0001	DT-1	88	3	4	5	TRUE	
-TC-005-0002	DT-2	88	30	40	50		TRUE
-TC-005-0003	DT-3	88	2	3	4		
-TC-005-0004	DT-4	50	9	0	0		TRUE
-TC-005-0005	DT-5	88	1	0	0		TRUE
+TC_ID	TestName	pid	xsmall	xmedium	xlarge	discount	fail	Expected Result
+TC-005-0001	DT-1	88	3	4	5	TRUE		Success: You have modified your shopping cart!
+TC-005-0002	DT-2	88	30	40	50		TRUE	Products marked with *** are not available in the desired quantity or not in stock!
+TC-005-0003	DT-3	88	2	3	4			Success: You have modified your shopping cart!
+TC-005-0004	DT-4	50	9	0	0		TRUE	Products marked with *** are not available in the desired quantity or not in stock!
+TC-005-0005	DT-5	88	1	0	0		TRUE	Minimum order amount for Apple Cinema 30" is 2!

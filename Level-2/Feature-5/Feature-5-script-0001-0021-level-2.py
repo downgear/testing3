@@ -90,30 +90,25 @@ class TC0050001(unittest.TestCase):
 
                     driver.find_element(self.config['SubmitBtn']['type'], self.config['SubmitBtn']['value']).click()
 
-                    if row["errorMsg"]:
-                        selector = (
-                            "//div[contains(@class,'form-group')][.//input[@name='" + row['input'] + "']]" +
-                            self.config['ErrToast']['value'] +
-                            " | " +
-                            "//div[contains(@class,'form-group')][.//textarea[@name='" + row['input'] + "']]" +
-                            self.config['ErrToast']['value']
-                        )
-                        self.assertTrue(
-                            self.is_element_present(
-                                self.config['ErrToast']['type'],
-                                selector,
-                            ),
-                            f"Did not handle {row['input']} correctly"
-                        )
-                        actual = driver.find_element(By.XPATH, selector).text
-                        self.assertEqual(row["errorMsg"], actual)
-                    else:
-                        self.assertTrue(
-                            self.is_element_present(
-                                self.config['SuccessToast']['type'], self.config['SuccessToast']['value']
-                            ),
-                            f"Did not handle {row['input']} correctly"
-                        )
+                    selector = ((
+                        "//div[contains(@class,'form-group')][.//input[@name='" + row['input'] + "']]" +
+                        self.config['ErrToast']['value'] +
+                        " | " +
+                        "//div[contains(@class,'form-group')][.//textarea[@name='" + row['input'] + "']]" +
+                        self.config['ErrToast']['value']
+                    )
+                        if row["fail"]
+                        else self.config['SuccessToast']['value'])
+                    selectorType = (self.config['ErrToast']['type'] if row['fail'] else self.config['SuccessToast']['type'])
+                    self.assertTrue(
+                        self.is_element_present(
+                            selectorType,
+                            selector,
+                        ),
+                        f"Did not handle {row['input']} correctly"
+                    )
+                    actual = driver.find_element(selectorType, selector).text
+                    self.assertIn(row["Expected Result"], actual)
 
                     print(f"  [PASS] {tc_id}")
                     pass_count += 1

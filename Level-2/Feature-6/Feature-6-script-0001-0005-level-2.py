@@ -201,14 +201,18 @@ class TC0050001(unittest.TestCase):
                             f"There was supposed to be a discount."
                         )
 
-                    if (row['error']):
+                    if (row['fail']):
                         self.assertTrue(
                             self.is_element_present(self.config['ErrTxt']['type'], self.config['ErrTxt']['value'])
                         )
+                        text = self.driver.find_element(self.config['ErrTxt']['type'], self.config['ErrTxt']['value']).text
+                        self.assertIn(row['Expected Result'], text)
                     else:
                         self.assertTrue(
                             self.is_element_present(self.config['SuccessTxt']['type'], self.config['SuccessTxt']['value'])
                         )
+                        text = self.driver.find_element(self.config['SuccessTxt']['type'], self.config['SuccessTxt']['value']).text
+                        self.assertIn(row['Expected Result'], text)
                         self.assertFalse(
                             self.is_element_present(self.config['ErrTxt']['type'], self.config['ErrTxt']['value'])
                         )

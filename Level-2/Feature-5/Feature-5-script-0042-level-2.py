@@ -91,7 +91,7 @@ class TC0050001(unittest.TestCase):
                     driver.find_element(self.config['SubmitBtn']['type'], self.config['SubmitBtn']['value']).click()
                     inp = row["input"]
                     inps = inp.split(",") if inp else []
-                    errMsg = row["errorMsg"]
+                    errMsg = row["Expected Result"]
                     errMsgs = errMsg.split(",") if errMsg else []
 
                     for (input, errMessage) in zip(inps, errMsgs):
@@ -109,8 +109,8 @@ class TC0050001(unittest.TestCase):
                             ),
                             f"Did not handle {input} correctly"
                         )
-                        actual = driver.find_element(By.XPATH, selector).text
-                        self.assertEqual(errMessage, actual)
+                        actual = driver.find_element(self.config['ErrToast']['type'], selector).text
+                        self.assertIn(errMessage, actual)
 
                     driver.find_element(self.config['Subject']['type'], self.config['Subject']['value']).clear()
                     driver.find_element(self.config['Message']['type'], self.config['Message']['value']).clear()
