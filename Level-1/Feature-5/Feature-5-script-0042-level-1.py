@@ -17,7 +17,7 @@ class TC0050001(unittest.TestCase):
     # change stuff in here to init
     def setUp(self):
         self.driver = webdriver.Chrome()
-        self.driver.implicitly_wait(30)
+        self.driver.implicitly_wait(10)
         self.driver.maximize_window()
         self.base_url = "https://ecommerce-playground.lambdatest.io/index.php?route=product/product&product_id=88"
         self.verificationErrors = []

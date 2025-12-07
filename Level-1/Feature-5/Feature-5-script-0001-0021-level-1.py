@@ -19,7 +19,7 @@ class TC0050001(unittest.TestCase):
         chrome_options = Options()
         chrome_options.add_argument("--log-level=3")
         self.driver = webdriver.Chrome(options=chrome_options)
-        self.driver.implicitly_wait(30)
+        self.driver.implicitly_wait(10)
         self.driver.maximize_window()
         self.base_url = "https://ecommerce-playground.lambdatest.io/index.php?route=product/product&product_id=88"
         self.verificationErrors = []

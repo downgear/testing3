@@ -17,7 +17,7 @@ class TC0050001(unittest.TestCase):
     # change stuff in here to init
     def setUp(self):
         self.driver = webdriver.Chrome()
-        self.driver.implicitly_wait(30)
+        self.driver.implicitly_wait(10)
         self.driver.maximize_window()
         self.config = self._load_config('Feature-5-config-level-2.csv')
         self.verificationErrors = []
